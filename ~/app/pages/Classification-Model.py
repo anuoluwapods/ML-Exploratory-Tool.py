@@ -99,7 +99,7 @@ def get_pip_mis_cat(imputer, encoder):
     return pipeline
   
   
- preprocessing = make_column_transformer( 
+preprocessing = make_column_transformer( 
 (get_pip_mis_cat(cat_imputer_selected, encoder_selected) , cat_cols_missing),
 (get_pip_mis_num(num_imputer_selected, scaler_selected) , num_cols_missing),
 (get_encoder(encoder_selected), cat_cols),
