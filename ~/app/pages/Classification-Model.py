@@ -96,15 +96,6 @@ X_preprocessed = preprocessing_pipeline.transform(X)
 st.header('Preprocessed dataset')
 st.write(X_preprocessed)
 
-
-st.sidebar.title('Model selection')
-classifier_list = ['Logistic regression', 'Support vector', 'K nearest neighbors', 'Random forest']
-classifier_selected = st.sidebar.selectbox('', classifier_list)
-pipeline = Pipeline([
-    ('preprocessing' , preprocessing),
-    ('ml', get_ml_algorithm(classifier_selected))
-])
-
 def get_ml_algorithm(algorithm):
     if algorithm == 'Logistic regression':
         return LogisticRegression()
@@ -114,6 +105,15 @@ def get_ml_algorithm(algorithm):
         return KNeighborsClassifier()
     if algorithm == 'Random forest':
         return RandomForestClassifier()
+st.sidebar.title('Model selection')
+classifier_list = ['Logistic regression', 'Support vector', 'K nearest neighbors', 'Random forest']
+classifier_selected = st.sidebar.selectbox('', classifier_list)
+pipeline = Pipeline([
+    ('preprocessing' , preprocessing),
+    ('ml', get_ml_algorithm(classifier_selected))
+])
+
+
 folds = KFold(n_splits = 10, shuffle=True, random_state = 0)
 cv_score = cross_val_score(pipeline, X, y, cv=folds)
 st.subheader('Results')
