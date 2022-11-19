@@ -44,7 +44,7 @@ try:
   target_selected = st.selectbox("Choose the target column:",options=df.columns)
   cat_cols_missing = st.selectbox("Choose the categorical missing column:",options=df.columns)
   num_cols_missing =  st.selectbox("Choose the numerical missing column:",options=df.columns)
-  cat_cols = st.selectbox("Choose the categorical column:",options=df.columns)
+  cat_cols = st.multiselect("Choose the categorical column:",options=df.columns)
   num_cols = st.selectbox("Choose the numerical column:",options=df.columns)
   drop_cols = st.selectbox("Choose the column to drop:",options=df.columns)
 
