@@ -51,6 +51,17 @@ try:
   X = df.drop(columns = target_selected)
   y = df[target_selected].values.ravel()
   
+  preprocessing = make_column_transformer( 
+    (get_pip_mis_cat(cat_imputer_selected, encoder_selected) , cat_cols_missing),
+    (get_pip_mis_num(num_imputer_selected, scaler_selected) , num_cols_missing),
+    (get_encoder(encoder_selected), cat_cols),
+    (get_scaler(scaler_selected), num_cols),
+    ("drop" , drop_cols)
+  )
+  preprocessing_pipeline = Pipeline([
+    ('preprocessing' , preprocessing)
+  ])
+  
 except:
   pass
 
@@ -99,16 +110,6 @@ def get_pip_mis_cat(imputer, encoder):
     return pipeline
   
 try:
-  preprocessing = make_column_transformer( 
-    (get_pip_mis_cat(cat_imputer_selected, encoder_selected) , cat_cols_missing),
-    (get_pip_mis_num(num_imputer_selected, scaler_selected) , num_cols_missing),
-    (get_encoder(encoder_selected), cat_cols),
-    (get_scaler(scaler_selected), num_cols),
-    ("drop" , drop_cols)
-  )
-  preprocessing_pipeline = Pipeline([
-    ('preprocessing' , preprocessing)
-  ])
 
   preprocessing_pipeline.fit(X)
   X_preprocessed = preprocessing_pipeline.transform(X)
