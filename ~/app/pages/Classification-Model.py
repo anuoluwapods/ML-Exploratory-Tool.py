@@ -51,16 +51,7 @@ try:
   X = df.drop(columns = target_selected)
   y = df[target_selected].values.ravel()
   
-  preprocessing = make_column_transformer( 
-    (get_pip_mis_cat(cat_imputer_selected, encoder_selected) , cat_cols_missing),
-    (get_pip_mis_num(num_imputer_selected, scaler_selected) , num_cols_missing),
-    (get_encoder(encoder_selected), cat_cols),
-    (get_scaler(scaler_selected), num_cols),
-    ("drop" , drop_cols)
-  )
-  preprocessing_pipeline = Pipeline([
-    ('preprocessing' , preprocessing)
-  ])
+ 
   
 except:
   pass
@@ -110,10 +101,45 @@ def get_pip_mis_cat(imputer, encoder):
     return pipeline
   
 try:
+  
+  preprocessing = make_column_transformer( 
+    (get_pip_mis_cat(cat_imputer_selected, encoder_selected) , cat_cols_missing),
+    (get_pip_mis_num(num_imputer_selected, scaler_selected) , num_cols_missing),
+    (get_encoder(encoder_selected), cat_cols),
+    (get_scaler(scaler_selected), num_cols),
+    ("drop" , drop_cols)
+  )
+  preprocessing_pipeline = Pipeline([
+    ('preprocessing' , preprocessing)
+  ])
 
   preprocessing_pipeline.fit(X)
   X_preprocessed = preprocessing_pipeline.transform(X)
   st.header('Preprocessed dataset')
   st.write(X_preprocessed)
+  
+  st.sidebar.title('Model selection')
+  classifier_list = ['Logistic regression', 'Support vector', 'K nearest neighbors', 'Random forest']
+  classifier_selected = st.sidebar.selectbox('', classifier_list)
+  pipeline = Pipeline([
+    ('preprocessing' , preprocessing),
+    ('ml', get_ml_algorithm(classifier_selected))
+  ])
+
+  def get_ml_algorithm(algorithm):
+     if algorithm == 'Logistic regression':
+        return LogisticRegression()
+     if algorithm == 'Support vector':
+        return SVC()
+     if algorithm == 'K nearest neighbors':
+        return KNeighborsClassifier()
+     if algorithm == 'Random forest':
+        return RandomForestClassifier()
+  folds = KFold(n_splits = 10, shuffle=True, random_state = 0)
+  cv_score = cross_val_score(pipeline, X, y, cv=folds)
+  st.subheader('Results')
+  st.write('Accuracy : ', round(cv_score.mean()*100,2), '%')
+  st.write('Standard deviation : ', round(cv_score.std()*100,2), '%')
 except:
   pass
+
