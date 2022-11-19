@@ -90,8 +90,8 @@ preprocessing = make_column_transformer(
 )
 preprocessing_pipeline = Pipeline([
     ('preprocessing' , preprocessing)
-    preprocessing_pipeline.fit(X)
-    X_preprocessed = preprocessing_pipeline.transform(X)
-    st.header('Preprocessed dataset')
-    st.write(X_preprocessed)
 ])
+preprocessing_pipeline.fit(X)
+X_preprocessed = preprocessing_pipeline.transform(X)
+st.header('Preprocessed dataset')
+st.write(X_preprocessed)
