@@ -115,5 +115,5 @@ try:
   X_preprocessed = preprocessing_pipeline.transform(X)
   st.header('Preprocessed dataset')
   st.write(X_preprocessed)
-
-  
+except:
+  pass
